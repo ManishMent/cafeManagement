@@ -3,13 +3,13 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 // Generate JWT token
-const generateToken = async (userId) => {
-  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '24h' });
-  
-await User.updateOne({ _id: userId }, { token: token})
-  return token
+const generateToken = (userId) => {
+  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '2m' });
+  // await User.updateOne({ _id: userId }, { token: token });
 
+  return token;
 };
+
 
 // @desc Register a new user
 // @route POST /api/auth/signup
@@ -28,13 +28,17 @@ const registerUser = async (req, res) => {
     // Create a new user
     const user = await User.create({ name, email, password });
 
+    const token = generateToken(user._id);
+    
+
     // Send back a token and user details
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id),
+      token: token,
     });
+    await User.updateOne({ _id: userId }, { token: token})
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -66,6 +70,16 @@ const authUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, authUser };
+
+const getUser = async (req, res) =>{
+  try {
+    const items = await User.find(); // Retrieve all items from the database
+    res.status(200).json(items); // Respond with the list of items
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Handle server errors
+  }
+}
+
+module.exports = { registerUser, authUser ,getUser};
 
 

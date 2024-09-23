@@ -14,7 +14,8 @@ const protect = async (req, res, next) => {
 
       // Verify the token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      
+
+      console.log(decoded , '-------------------')
       if (!decoded) {
         throw new Error('Invalid token'); // Create a new Error with a specific message
     }

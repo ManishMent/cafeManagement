@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 // Generate JWT token
 const generateToken = (userId) => {
-  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '2m' });
+  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
   // await User.updateOne({ _id: userId }, { token: token });
 
   return token;
@@ -16,7 +16,7 @@ const generateToken = (userId) => {
 const registerUser = async (req, res) => {
 
 
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
     // Check if the user already exists
@@ -26,7 +26,7 @@ const registerUser = async (req, res) => {
     }
 
     // Create a new user
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password , role});
 
     const token = generateToken(user._id);
     
@@ -36,9 +36,10 @@ const registerUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role : user.role,
       token: token,
     });
-    await User.updateOne({ _id: userId }, { token: token})
+    await User.updateOne({ _id: user._id }, { token: token})
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

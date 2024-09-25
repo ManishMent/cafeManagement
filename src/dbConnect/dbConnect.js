@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const connectToDatabase = async (databaseUrl) => {
   try {
+    console.log("ip ", databaseUrl);
     await mongoose.connect(databaseUrl, {
       //   useNewUrlParser: true,
       //   useUnifiedTopology: true,

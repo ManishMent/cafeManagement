@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const OrderSchema = new mongoose.Schema(
   {
     table: {
-      type: Schema.Types.ObjectId,
+      type : mongoose.Schema.Types.ObjectId,
       ref: "Table", // This references the 'Table' collection
       required: true,
     },
@@ -11,7 +11,7 @@ const OrderSchema = new mongoose.Schema(
     items: [
       {
         item: {
-          type: Schema.Types.ObjectId,
+          type : mongoose.Schema.Types.ObjectId,
           ref: "Item", // This references the 'Item' collection
           required: true,
         },
@@ -30,3 +30,5 @@ const OrderSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Order", OrderSchema);
+
+
